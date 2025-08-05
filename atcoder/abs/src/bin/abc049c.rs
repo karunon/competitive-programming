@@ -1,32 +1,47 @@
-// Compile Errorなので多分この書き方ではないのよね。
-// array.get()で範囲外の時はNoneで返すようにしているはずだから範囲外エラーではないのかな？？
-
 use proconio::input;
 
 fn main() {
     input! {
-        s: String,
+        mut s: String,
     }
 
-    let mut i = s.len();
+    let search_str = ["dreamer", "eraser", "dream", "erase"];
 
-    while i >= 5 {
-        if s.get(i - 5..i).unwrap() == "dream".to_string() {
-            i -= 5;
-        } else if s.get(i - 5..i).unwrap() == "erase".to_string() {
-            i -= 5;
-        } else if s.get(i - 7..i).unwrap() == "dreamer".to_string() {
-            i -= 7;
-        } else if s.get(i - 6..i).unwrap() == "eraser".to_string() {
-            i -= 6;
-        } else {
+    loop {
+        let mut n = 0;
+
+        if s.chars().count() == 0 {
+            println!("YES");
+            return;
+        }
+
+        for search in search_str.iter() {
+            let mut search_flag = false;
+            if s.len() >= search.len() {
+                let copy_s: Vec<char> = s.chars().collect();
+                let copy_search: Vec<char> = search.chars().collect();
+
+                for i in 0..copy_search.len() {
+                    if copy_s[copy_s.len() - 1 - i] != copy_search[copy_search.len() - 1 - i] {
+                        break;
+                    }
+                    if i == copy_search.len() - 1 {
+                        search_flag = true;
+                        break;
+                    }
+                }
+                if search_flag {
+                    s = s[..s.len() - search.len()].to_string();
+                    break;
+                }
+            }
+            if !search_flag {
+                n += 1;
+            }
+        }
+        if n == search_str.len() {
             println!("NO");
             return;
         }
-    }
-    if i == 0 {
-        println!("YES");
-    } else {
-        println!("NO");
     }
 }
